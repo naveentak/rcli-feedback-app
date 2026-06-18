@@ -3,7 +3,7 @@
 set -euo pipefail
 
 OWNER="${GITHUB_OWNER:?Set GITHUB_OWNER}"
-REPO="${GITHUB_REPO:-feedback}"
+REPO="${GITHUB_REPO:-rcli-feedback-app}"
 
 labels=(
   "source:rclip|0E8A16|Feedback from r:clip"

@@ -83,7 +83,7 @@ gcloud run deploy "$SERVICE" \
   --cpu=1 \
   --min-instances=0 \
   --max-instances=3 \
-  --set-secrets="GITHUB_TOKEN=github-token:latest,API_KEYS=api-keys:latest" \
+  --set-secrets="GITHUB_TOKEN=github-token:latest,API_KEYS=api-keys:latest,FEEDBACK_HMAC_SECRET=feedback-hmac-secret:latest" \
   --set-env-vars="GITHUB_OWNER=naveentak,GITHUB_REPO=rcli-feedback-app,DEV_MODE=false,PUBLIC_SUBMIT=true,GIN_MODE=release" \
   --quiet
 

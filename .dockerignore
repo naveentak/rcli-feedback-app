@@ -1,0 +1,6 @@
+bin/
+.env
+.git/
+.gitignore
+*.md
+scripts/e2e-test.sh

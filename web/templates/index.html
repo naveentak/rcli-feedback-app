@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Feedback</h1>
+    <p class="subtitle">Submit and view tickets across all products</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="submit">Submit</button>
+    <button class="tab" data-tab="browse">Browse</button>
+  </nav>
+
+  <main>
+    <section id="submit-panel" class="panel">
+      <form id="submit-form" class="submit-form">
+        <div class="form-row">
+          <label>
+            App
+            <select name="app" required>
+              {{range .apps}}
+              <option value="{{.}}">{{.}}</option>
+              {{end}}
+            </select>
+          </label>
+          <label>
+            Type
+            <select name="type" required>
+              <option value="bug">Bug Report</option>
+              <option value="feature-request">Feature Request</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          Title
+          <input type="text" name="title" required placeholder="Short summary of the issue">
+        </label>
+        <label>
+          Description
+          <textarea name="description" required rows="5" placeholder="Steps to reproduce, expected behavior, etc."></textarea>
+        </label>
+        <label>
+          Your name or email <span class="optional">(optional)</span>
+          <input type="text" name="reporter" placeholder="you@example.com">
+        </label>
+        <button type="submit" id="submit-btn">Submit Feedback</button>
+        <p id="submit-result" class="submit-result hidden"></p>
+      </form>
+    </section>
+
+    <section id="browse-panel" class="panel hidden">
+      <div class="filters">
+        <label>
+          App
+          <select id="app-filter">
+            <option value="all">All apps</option>
+            {{range .apps}}
+            <option value="{{.}}">{{.}}</option>
+            {{end}}
+          </select>
+        </label>
+        <label>
+          Status
+          <select id="status-filter">
+            <option value="open">Open</option>
+            <option value="triaged">Triaged</option>
+            <option value="in-progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+        <button type="button" id="refresh-btn">Refresh</button>
+      </div>
+
+      <section id="tickets" class="tickets"></section>
+      <section id="detail" class="detail hidden"></section>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

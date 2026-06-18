@@ -23,6 +23,7 @@ func main() {
 	handler := feedback.NewHandler(svc)
 
 	r := gin.Default()
+	r.Use(corsMiddleware(cfg.AllowedOrigins))
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
@@ -46,6 +47,10 @@ func main() {
 			api.POST("/feedback", handler.Submit)
 		}
 
+		if cfg.HMACSecret != "" {
+			api.POST("/feedback/signed", handler.SignedSubmit(cfg.HMACSecret))
+		}
+
 		if len(cfg.APIKeys) > 0 {
 			protected := api.Group("")
 			protected.Use(auth.APIKeyMiddleware(cfg.APIKeys))
@@ -64,5 +69,31 @@ func main() {
 	log.Printf("feedback service listening on :%s", cfg.Port)
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatalf("server: %v", err)
+	}
+}
+
+func corsMiddleware(allowedOrigins []string) gin.HandlerFunc {
+	defaults := []string{
+		"https://rclip.refactory.co.za",
+		"http://localhost:5173",
+		"http://localhost:3000",
+	}
+	origins := append(defaults, allowedOrigins...)
+
+	return func(c *gin.Context) {
+		origin := c.GetHeader("Origin")
+		for _, o := range origins {
+			if origin == o {
+				c.Header("Access-Control-Allow-Origin", origin)
+				c.Header("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS")
+				c.Header("Access-Control-Allow-Headers", "Content-Type, X-API-Key, X-App, Authorization")
+				break
+			}
+		}
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+		c.Next()
 	}
 }

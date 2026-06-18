@@ -76,6 +76,19 @@ export FEEDBACK_APP=rclip
 
 Auth headers: `X-API-Key` + `X-App` (or `Authorization: Bearer <key>`).
 
+## Giving keys to client apps (r:clip, BoKa, etc.)
+
+Client apps have **no gcloud access**. Only whoever runs this backend manages keys in GCP Secret Manager.
+
+To onboard an app:
+
+1. Generate a key: `openssl rand -hex 24`
+2. Add to Secret Manager `api-keys`: `rclip:NEWKEY,...` then redeploy Cloud Run
+3. Send the **r:clip key only** to the app developer via password manager or secure channel
+4. They paste it into their local `Secrets.xcconfig` (gitignored) before Release builds
+
+Each app's key only allows **submitting** tickets for that app.
+
 ## Labels
 
 - `source:rclip`, `source:boka`, `source:thxbud`, `source:mamzo`, `source:glasscourt`

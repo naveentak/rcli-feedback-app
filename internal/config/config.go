@@ -15,6 +15,7 @@ type Config struct {
 	AllowedOrigins []string
 	DevMode        bool // local dev: skip API key on all write endpoints
 	PublicSubmit   bool // production: allow unauthenticated POST /feedback (web form)
+	HMACSecret     string
 }
 
 func Load() (*Config, error) {
@@ -26,6 +27,7 @@ func Load() (*Config, error) {
 		APIKeys:     parseAPIKeys(os.Getenv("API_KEYS")),
 		DevMode:      os.Getenv("DEV_MODE") == "true",
 		PublicSubmit: os.Getenv("PUBLIC_SUBMIT") == "true",
+		HMACSecret:   os.Getenv("FEEDBACK_HMAC_SECRET"),
 	}
 
 	if origins := os.Getenv("ALLOWED_ORIGINS"); origins != "" {
